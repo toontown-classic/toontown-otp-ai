@@ -754,7 +754,7 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI, BattleBas
             toon = self.getToon(toonId)
             if toon:
                 toon.hp = -1
-                toon.inventory.zeroInv(1)
+                toon.inventory.zeroInv()
                 self.__handleSuddenExit(toonId, 0)
 
     def signupToon(self, toonId, x, y, z):
