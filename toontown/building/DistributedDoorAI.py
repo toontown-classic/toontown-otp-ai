@@ -116,10 +116,10 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
         if lockedVal:
             self.sendReject(avatarId, lockedVal)
         else:
-            self.enqueueAvatarIdEnter(avatarId)
             self.sendUpdateToAvatarId(
                 avatarId, 'setOtherZoneIdAndDoId',
                 [self.otherDoor.getZoneId(), self.otherDoor.getDoId()])
+            self.enqueueAvatarIdEnter(avatarId)
 
     def enqueueAvatarIdEnter(self, avatarId):
         if avatarId not in self.avatarsWhoAreEntering:
