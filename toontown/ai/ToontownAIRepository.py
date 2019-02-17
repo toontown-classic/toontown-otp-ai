@@ -174,9 +174,12 @@ class ToontownAIRepository(ToontownInternalRepository):
         self.send(dg)
 
     def handleConnected(self):
+        self.districtId = self.allocateChannel()
+
         # register the AI on the state server...
         dg = PyDatagram()
         dg.addServerHeader(self.serverId, self.ourChannel, STATESERVER_ADD_SHARD)
+        dg.addUint32(self.districtId)
         dg.addString(self.districtName)
         dg.addUint32(self.districtPopulation)
         self.send(dg)
@@ -187,10 +190,8 @@ class ToontownAIRepository(ToontownInternalRepository):
         dg.addServerHeader(self.serverId, self.ourChannel, STATESERVER_REMOVE_SHARD)
         self.addPostRemove(dg)
 
-        self.districtId = self.ourChannel
-
         self.rootObj = DistributedObjectAI(self)
-        self.rootObj.generateWithRequiredAndId(self.ourChannel, 0, 0)
+        self.rootObj.generateWithRequiredAndId(self.districtId, 0, 0)
 
         self.notify.info('Creating managers...')
         self.createManagers()

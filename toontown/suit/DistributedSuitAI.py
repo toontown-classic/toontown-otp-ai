@@ -263,7 +263,7 @@ class DistributedSuitAI(DistributedSuitBaseAI.DistributedSuitBaseAI):
             self.sp.zoneChange(self, self.zoneId, zoneId)
             # Originally, we would call self.air.sendSetZoneMsg(). I think the
             # following is a worthy replacement, however:
-            self.b_setLocation(simbase.air.districtId, zoneId)
+            #self.b_setLocation(simbase.air.districtId, zoneId)
             self.zoneId = zoneId
             if self.pathState == 1:
                 self.sp.checkForBattle(zoneId, self)
