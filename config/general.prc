@@ -77,7 +77,7 @@ want-butterflies #t
 # Classic characters:
 want-classic-chars #t
 want-mickey #t
-want-donald-dock #t
+want-donald-dock #f
 want-daisy #t
 want-minnie #t
 want-pluto #t
