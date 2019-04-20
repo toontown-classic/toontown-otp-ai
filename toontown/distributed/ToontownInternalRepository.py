@@ -13,8 +13,8 @@ class ToontownInternalRepository(OTPInternalRepository):
 
         #self.netMessenger.register(0, 'shardStatus')
         #self.netMessenger.register(1, 'queryShardStatus')
-        #self.netMessenger.register(2, 'startInvasion')
-        #self.netMessenger.register(3, 'stopInvasion')
+        self.netMessenger.register(2, 'startInvasion')
+        self.netMessenger.register(3, 'stopInvasion')
 
     def getAvatarIdFromSender(self):
         return self.getMsgSender() & 0xFFFFFFFF

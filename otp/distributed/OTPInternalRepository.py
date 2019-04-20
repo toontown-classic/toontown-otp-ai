@@ -6,6 +6,8 @@ from otp.distributed.MessageTypes import *
 from direct.showbase import ShowBase  # __builtin__.config
 from direct.task.TaskManagerGlobal import *  # taskMgr
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.NetMessenger import NetMessenger
+from direct.distributed.AstronDatabaseInterface import AstronDatabaseInterface
 from direct.distributed.ConnectionRepository import ConnectionRepository
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
@@ -167,9 +169,8 @@ class OTPInternalRepository(ConnectionRepository):
 
         self.__contextCounter = 0
 
-        # self.netMessenger = NetMessenger(self)
-
-        # self.dbInterface = AstronDatabaseInterface(self)
+        self.netMessenger = NetMessenger(self)
+        self.dbInterface = AstronDatabaseInterface(self)
 
         self.__callbacks = {}
 
@@ -283,29 +284,26 @@ class OTPInternalRepository(ConnectionRepository):
             self.handleObjExit(di)
         elif msgType == STATESERVER_OBJECT_CHANGING_LOCATION:
             self.handleObjLocation(di)
+        elif msgType in (DBSERVER_CREATE_OBJECT_RESP,
+                         DBSERVER_OBJECT_GET_ALL_RESP,
+                         DBSERVER_OBJECT_GET_FIELDS_RESP,
+                         DBSERVER_OBJECT_GET_FIELD_RESP,
+                         DBSERVER_OBJECT_SET_FIELD_IF_EQUALS_RESP,
+                         DBSERVER_OBJECT_SET_FIELDS_IF_EQUALS_RESP):
+            self.dbInterface.handleDatagram(msgType, di)
+        elif msgType == DBSS_OBJECT_GET_ACTIVATED_RESP:
+            self.handleGetActivatedResp(di)
+        elif msgType == STATESERVER_OBJECT_GET_LOCATION_RESP:
+            self.handleGetLocationResp(di)
+        elif msgType == STATESERVER_OBJECT_GET_ALL_RESP:
+            self.handleGetObjectResp(di)
+        elif msgType == CLIENTAGENT_GET_NETWORK_ADDRESS_RESP:
+            self.handleGetNetworkAddressResp(di)
+        elif msgType >= 20000:
+            # These messages belong to the NetMessenger:
+            self.netMessenger.handle(msgType, di)
         else:
-
-        # elif msgType in (DBSERVER_CREATE_OBJECT_RESP,
-        #                 DBSERVER_OBJECT_GET_ALL_RESP,
-        #                 DBSERVER_OBJECT_GET_FIELDS_RESP,
-        #                 DBSERVER_OBJECT_GET_FIELD_RESP,
-        #                 DBSERVER_OBJECT_SET_FIELD_IF_EQUALS_RESP,
-        #                 DBSERVER_OBJECT_SET_FIELDS_IF_EQUALS_RESP):
-        #    self.dbInterface.handleDatagram(msgType, di)
-        # elif msgType == DBSS_OBJECT_GET_ACTIVATED_RESP:
-        #    self.handleGetActivatedResp(di)
-        # elif msgType == STATESERVER_OBJECT_GET_LOCATION_RESP:
-        #    self.handleGetLocationResp(di)
-        # elif msgType == STATESERVER_OBJECT_GET_ALL_RESP:
-        #    self.handleGetObjectResp(di)
-        # elif msgType == CLIENTAGENT_GET_NETWORK_ADDRESS_RESP:
-        #    self.handleGetNetworkAddressResp(di)
-        # elif msgType >= 20000:
-        #    # These messages belong to the NetMessenger:
-        #    self.netMessenger.handle(msgType, di)
-
-            self.notify.warning('Received message with unknown MsgType=%d'
-                                 % msgType)
+            self.notify.warning('Received message with unknown MsgType=%d' % msgType)
 
     def handleObjLocation(self, di):
         doId = di.getUint32()

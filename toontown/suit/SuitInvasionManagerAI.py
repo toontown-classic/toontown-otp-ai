@@ -18,10 +18,10 @@ class SuitInvasionManagerAI:
         self.suitTypeIndex = None
         self.flags = 0
 
-        #self.air.netMessenger.accept(
-        #    'startInvasion', self, self.handleStartInvasion)
-        #self.air.netMessenger.accept(
-        #    'stopInvasion', self, self.handleStopInvasion)
+        self.air.netMessenger.accept(
+            'startInvasion', self, self.handleStartInvasion)
+        self.air.netMessenger.accept(
+            'stopInvasion', self, self.handleStopInvasion)
 
         # We want to handle shard status queries so that a ShardStatusReceiver
         # being created after we're created will know where we're at:
@@ -145,7 +145,7 @@ class SuitInvasionManagerAI:
             msgType = ToontownGlobals.V2InvasionBegin
         self.air.newsManager.sendUpdate(
             'setInvasionStatus',
-            [msgType, self.getSuitName(), self.total, self.flags])
+            [msgType, self.getSuitName(), self.total])
 
     def notifyInvasionEnded(self):
         msgType = ToontownGlobals.SuitInvasionEnd
@@ -156,13 +156,12 @@ class SuitInvasionManagerAI:
         elif self.flags & IFV2:
             msgType = ToontownGlobals.V2InvasionEnd
         self.air.newsManager.sendUpdate(
-            'setInvasionStatus', [msgType, self.getSuitName(), 0, self.flags])
+            'setInvasionStatus', [msgType, self.getSuitName(), 0])
 
     def notifyInvasionUpdate(self):
         self.air.newsManager.sendUpdate(
             'setInvasionStatus',
-            [ToontownGlobals.SuitInvasionUpdate, self.getSuitName(),
-             self.remaining, self.flags])
+            [ToontownGlobals.SuitInvasionUpdate, self.getSuitName(), self.remaining])
 
     def notifyInvasionBulletin(self, avId):
         msgType = ToontownGlobals.SuitInvasionBulletin
@@ -174,7 +173,7 @@ class SuitInvasionManagerAI:
             msgType = ToontownGlobals.V2InvasionBulletin
         self.air.newsManager.sendUpdateToAvatarId(
             avId, 'setInvasionStatus',
-            [msgType, self.getSuitName(), self.remaining, self.flags])
+            [msgType, self.getSuitName(), self.remaining])
 
     def flySuits(self):
         for suitPlanner in self.air.suitPlanners.values():
@@ -205,6 +204,7 @@ class SuitInvasionManagerAI:
                     type = SuitDNA.getDeptFullname(self.getSuitName())
             else:
                 type = None
+
             status = {
                 'invasion': {
                     'type': type,
@@ -215,6 +215,8 @@ class SuitInvasionManagerAI:
                 }
             }
         else:
-            status = {'invasion': None}
+            status = {
+                'invasion': None
+            }
 
         #self.air.netMessenger.send('shardStatus', [self.air.ourChannel, status])
