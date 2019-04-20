@@ -6,26 +6,23 @@ from toontown.toonbase import ToontownGlobals
 class SuitLeg:
     TWalkFromStreet = 0
     TWalkToStreet = 1
-    TWalk = 2
+    TBellicose = 2
+    TWalk = TBellicose
     TFromSky = 3
     TToSky = 4
     TFromSuitBuilding = 5
     TToSuitBuilding = 6
     TToToonBuilding = 7
-    TFromCogHQ = 8
-    TToCogHQ = 9
-    TOff = 10
+    TOff = 8
     TypeToName = {
         TWalkFromStreet: 'WalkFromStreet',
         TWalkToStreet: 'WalkToStreet',
-        TWalk: 'Walk',
+        TBellicose: 'Bellicose',
         TFromSky: 'FromSky',
         TToSky: 'ToSky',
         TFromSuitBuilding: 'FromSuitBuilding',
         TToSuitBuilding: 'ToSuitBuilding',
         TToToonBuilding: 'ToToonBuilding',
-        TFromCogHQ: 'FromCogHQ',
-        TToCogHQ: 'ToCogHQ',
         TOff: 'Off'
     }
 
@@ -80,8 +77,7 @@ class SuitLeg:
             return SuitTimings.fromSuitBuilding
         if self.type == SuitLeg.TToSuitBuilding:
             return SuitTimings.toSuitBuilding
-        if self.type in (SuitLeg.TToToonBuilding, SuitLeg.TToCogHQ,
-                         SuitLeg.TFromCogHQ):
+        if self.type == SuitLeg.TToToonBuilding:
             return SuitTimings.toToonBuilding
         return 0.0
 
@@ -89,12 +85,10 @@ class SuitLeg:
         return self.endTime
 
     def getPosAtTime(self, time):
-        if self.type in (SuitLeg.TFromSky, SuitLeg.TFromSuitBuilding,
-                         SuitLeg.TFromCogHQ):
+        if self.type in (SuitLeg.TFromSky, SuitLeg.TFromSuitBuilding):
             return self.posA
         elif self.type in (SuitLeg.TToSky, SuitLeg.TToSuitBuilding,
-                           SuitLeg.TToToonBuilding, SuitLeg.TToCogHQ,
-                           SuitLeg.TOff):
+                           SuitLeg.TToToonBuilding, SuitLeg.TOff):
             return self.posB
 
         delta = self.posB - self.posA
@@ -123,18 +117,6 @@ class SuitLegList:
             pointTypeA = pointA.getPointType()
             pointTypeB = pointB.getPointType()
             legType = self.getLegType(pointTypeA, pointTypeB)
-
-            if pointTypeA == DNASuitPoint.COGHQ_OUT_POINT:
-                # We're going out of a door, so we'll need to insert a door
-                # leg before the move:
-                self.add(pointA, pointB, SuitLeg.TFromCogHQ)
-
-            self.add(pointA, pointB, legType)
-
-            if pointTypeB == DNASuitPoint.COGHQ_IN_POINT:
-                # We're going into a door, so we'll need to insert a door leg
-                # after the move:
-                self.add(pointA, pointB, SuitLeg.TToCogHQ)
 
         # Add the last SuitLeg:
         numPoints = self.path.getNumPoints()
