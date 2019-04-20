@@ -166,7 +166,7 @@ class TutorialManagerAI(DistributedObjectAI):
         av.b_setHp(15)
         av.b_setMaxHp(15)
 
-        av.inventory.zeroInv(killUber=True)
+        av.inventory.zeroInv()
         av.inventory.addItem(ToontownBattleGlobals.THROW_TRACK, 0)
         av.inventory.addItem(ToontownBattleGlobals.SQUIRT_TRACK, 0)
         av.d_setInventory(av.inventory.makeNetString())

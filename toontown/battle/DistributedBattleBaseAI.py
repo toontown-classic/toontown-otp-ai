@@ -1604,7 +1604,7 @@ class DistributedBattleBaseAI(DistributedObjectAI.DistributedObjectAI, BattleBas
                     toon.takeDamage(-hpDelta, quietly=1)
                 if toon.hp <= 0:
                     self.notify.debug('movieDone() - toon: %d was killed' % activeToon)
-                    toon.inventory.zeroInv(1)
+                    toon.inventory.zeroInv()
                     deadToons.append(activeToon)
                 self.notify.debug('AFTER ROUND: toon: %d setHp: %d' % (toon.doId, toon.hp))
 
