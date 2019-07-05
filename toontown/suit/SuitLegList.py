@@ -6,8 +6,7 @@ from toontown.toonbase import ToontownGlobals
 class SuitLeg:
     TWalkFromStreet = 0
     TWalkToStreet = 1
-    TBellicose = 2
-    TWalk = TBellicose
+    TWalk = 2
     TFromSky = 3
     TToSky = 4
     TFromSuitBuilding = 5
@@ -17,7 +16,7 @@ class SuitLeg:
     TypeToName = {
         TWalkFromStreet: 'WalkFromStreet',
         TWalkToStreet: 'WalkToStreet',
-        TBellicose: 'Bellicose',
+        TWalk: 'Walk',
         TFromSky: 'FromSky',
         TToSky: 'ToSky',
         TFromSuitBuilding: 'FromSuitBuilding',
@@ -88,7 +87,8 @@ class SuitLeg:
         if self.type in (SuitLeg.TFromSky, SuitLeg.TFromSuitBuilding):
             return self.posA
         elif self.type in (SuitLeg.TToSky, SuitLeg.TToSuitBuilding,
-                           SuitLeg.TToToonBuilding, SuitLeg.TOff):
+                           SuitLeg.TToToonBuilding, SuitLeg.TToCogHQ,
+                           SuitLeg.TOff):
             return self.posB
 
         delta = self.posB - self.posA
@@ -117,6 +117,7 @@ class SuitLegList:
             pointTypeA = pointA.getPointType()
             pointTypeB = pointB.getPointType()
             legType = self.getLegType(pointTypeA, pointTypeB)
+            self.add(pointA, pointB, legType)
 
         # Add the last SuitLeg:
         numPoints = self.path.getNumPoints()

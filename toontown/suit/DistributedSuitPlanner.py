@@ -51,7 +51,7 @@ class DistributedSuitPlanner(DistributedObject.DistributedObject, SuitPlannerBas
         vizNode = GeomNode(self.uniqueName('PathViz'))
         lines = LineSegs()
         self.pathViz = render.attachNewNode(vizNode)
-        points = self.frontdoorPointList + self.sidedoorPointList + self.cogHQDoorPointList + self.streetPointList
+        points = self.frontdoorPointList + self.sidedoorPointList + self.streetPointList
         while len(points) > 0:
             self.__doShowPoints(vizNode, lines, None, points)
         cnode = CollisionNode('battleCells')
@@ -80,10 +80,6 @@ class DistributedSuitPlanner(DistributedObject.DistributedObject, SuitPlannerBas
             color = (1, 0, 0, 1)
         elif p.getPointType() == DNASuitPoint.SIDE_DOOR_POINT:
             color = (0, 0, 1, 1)
-        elif p.getPointType() == DNASuitPoint.COGHQ_IN_POINT:
-            color = (0, 0, 0, 1)
-        elif p.getPointType() == DNASuitPoint.COGHQ_OUT_POINT:
-            color = (0.5, 0.5, 0.5, 1)
         else:
             color = (0, 1, 0, 1)
         self.__makePathVizText(text, pos[0], pos[1], pos[2], color, i=p.getIndex())
@@ -161,10 +157,6 @@ class DistributedSuitPlanner(DistributedObject.DistributedObject, SuitPlannerBas
                 color = (1, 0, 0, 1)
             elif p.getPointType() == DNASuitPoint.SIDE_DOOR_POINT:
                 color = (0, 0, 1, 1)
-            elif p.getPointType() == DNASuitPoint.COGHQ_IN_POINT:
-                color = (0, 0, 0, 1)
-            elif p.getPointType() == DNASuitPoint.COGHQ_OUT_POINT:
-                color = (0.5, 0.5, 0.5, 1)
             else:
                 color = (0, 1, 0, 1)
             self.__makePathVizText(str(p.getIndex()), pos[0], pos[1], pos[2], color, i=p.getIndex())
