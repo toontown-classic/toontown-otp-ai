@@ -87,8 +87,7 @@ class SuitLeg:
         if self.type in (SuitLeg.TFromSky, SuitLeg.TFromSuitBuilding):
             return self.posA
         elif self.type in (SuitLeg.TToSky, SuitLeg.TToSuitBuilding,
-                           SuitLeg.TToToonBuilding, SuitLeg.TToCogHQ,
-                           SuitLeg.TOff):
+                           SuitLeg.TToToonBuilding, SuitLeg.TOff):
             return self.posB
 
         delta = self.posB - self.posA
