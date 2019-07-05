@@ -1,5 +1,3 @@
-# File: D (Python 2.4)
-
 from otp.ai.AIBaseGlobal import *
 from direct.distributed.ClockDelta import *
 from otp.avatar import DistributedAvatarAI
@@ -16,16 +14,13 @@ class DistributedCCharBaseAI(DistributedAvatarAI.DistributedAvatarAI):
         self.transitionToCostume = 0
         self.diffPath = None
 
-
     def delete(self):
         self.ignoreAll()
         DistributedAvatarAI.DistributedAvatarAI.delete(self)
 
-
     def exitOff(self):
-        self._DistributedCCharBaseAI__initAttentionSpan()
-        self._DistributedCCharBaseAI__clearNearbyAvatars()
-
+        self.__initAttentionSpan()
+        self.__clearNearbyAvatars()
 
     def avatarEnter(self):
         avId = self.air.getAvatarIdFromSender()
@@ -39,19 +34,17 @@ class DistributedCCharBaseAI(DistributedAvatarAI.DistributedAvatarAI):
         self.nearbyAvatarInfoDict[avId]['enterTime'] = globalClock.getRealTime()
         self.nearbyAvatarInfoDict[avId]['lastChatTime'] = 0
         self.sortNearbyAvatars()
-        self._DistributedCCharBaseAI__interestingAvatarEventOccured()
+        self.__interestingAvatarEventOccured()
         avExitEvent = self.air.getAvatarExitEvent(avId)
-        self.acceptOnce(avExitEvent, self._DistributedCCharBaseAI__handleExitedAvatar, [
+        self.acceptOnce(avExitEvent, self.__handleExitedAvatar, [
             avId])
         self.avatarEnterNextState()
 
-
     def avatarExit(self):
         avId = self.air.getAvatarIdFromSender()
-        self._DistributedCCharBaseAI__doAvatarExit(avId)
+        self.__doAvatarExit(avId)
 
-
-    def _DistributedCCharBaseAI__doAvatarExit(self, avId):
+    def __doAvatarExit(self, avId):
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug('removing avatar ' + str(avId) + ' from the nearby avatar list')
         if avId not in self.nearbyAvatars:
@@ -63,19 +56,15 @@ class DistributedCCharBaseAI(DistributedAvatarAI.DistributedAvatarAI):
             self.nearbyAvatars.remove(avId)
             self.avatarExitNextState()
 
-
     def avatarEnterNextState():
         pass
-
 
     def avatarExitNextState():
         pass
 
-
-    def _DistributedCCharBaseAI__clearNearbyAvatars(self):
+    def __clearNearbyAvatars(self):
         self.nearbyAvatars = []
         self.nearbyAvatarInfoDict = { }
-
 
     def sortNearbyAvatars(self):
 
@@ -91,74 +80,58 @@ class DistributedCCharBaseAI(DistributedAvatarAI.DistributedAvatarAI):
 
         self.nearbyAvatars.sort(nAv_compare)
 
-
     def getNearbyAvatars(self):
         return self.nearbyAvatars
 
-
-    def _DistributedCCharBaseAI__avatarSpoke(self, avId):
+    def __avatarSpoke(self, avId):
         now = globalClock.getRealTime()
         if avId in self.nearbyAvatarInfoDict:
             self.nearbyAvatarInfoDict[avId]['lastChatTime'] = now
-            self._DistributedCCharBaseAI__interestingAvatarEventOccured()
+            self.__interestingAvatarEventOccured()
 
+    def __initAttentionSpan(self):
+        self.__avatarTimeoutBase = 0
 
-
-    def _DistributedCCharBaseAI__initAttentionSpan(self):
-        self._DistributedCCharBaseAI__avatarTimeoutBase = 0
-
-
-    def _DistributedCCharBaseAI__interestingAvatarEventOccured(self, t = None):
+    def __interestingAvatarEventOccured(self, t = None):
         if t == None:
             t = globalClock.getRealTime()
 
-        self._DistributedCCharBaseAI__avatarTimeoutBase = t
-
+        self.__avatarTimeoutBase = t
 
     def lostInterest(self):
         now = globalClock.getRealTime()
-        if now > self._DistributedCCharBaseAI__avatarTimeoutBase + 50.0:
+        if now > self.__avatarTimeoutBase + 50.0:
             return 1
-
         return 0
 
-
-    def _DistributedCCharBaseAI__handleExitedAvatar(self, avId):
-        self._DistributedCCharBaseAI__doAvatarExit(avId)
-
+    def __handleExitedAvatar(self, avId):
+        self.__doAvatarExit(avId)
 
     def setNearbyAvatarChat(self, msg):
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug('setNearbyAvatarChat: avatar ' + str(avId) + ' said ' + str(msg))
-        self._DistributedCCharBaseAI__avatarSpoke(avId)
-        self.air.doFind('DistributedSmartNPC').sendUpdate('talkMessage', [avId, msg])
-
+        self.__avatarSpoke(avId)
 
     def setNearbyAvatarSC(self, msgIndex):
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug('setNearbyAvatarSC: avatar %s said SpeedChat phrase %s' % (avId, msgIndex))
-        self._DistributedCCharBaseAI__avatarSpoke(avId)
-
+        self.__avatarSpoke(avId)
 
     def setNearbyAvatarSCCustom(self, msgIndex):
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug('setNearbyAvatarSCCustom: avatar %s said custom SpeedChat phrase %s' % (avId, msgIndex))
-        self._DistributedCCharBaseAI__avatarSpoke(avId)
-
+        self.__avatarSpoke(avId)
 
     def setNearbyAvatarSCToontask(self, taskId, toNpcId, toonProgress, msgIndex):
         avId = self.air.getAvatarIdFromSender()
         self.notify.debug('setNearbyAvatarSCToontask: avatar %s said %s' % (avId, (taskId, toNpcId, toonProgress, msgIndex)))
-        self._DistributedCCharBaseAI__avatarSpoke(avId)
-
+        self.__avatarSpoke(avId)
 
     def getWalk(self):
         return ('', '', 0)
 
-
     def walkSpeed(self):
         return 0.10000000000000001
-
 
     def handleHolidays(self):
         self.CCChatter = 0
@@ -186,23 +159,15 @@ class DistributedCCharBaseAI(DistributedAvatarAI.DistributedAvatarAI):
             elif ToontownGlobals.SILLY_CHATTER_FIVE in simbase.air.holidayManager.currentHolidays:
                 self.CCChatter = ToontownGlobals.SILLY_CHATTER_FOUR
 
-
-
-
     def getCCLocation(self):
         return 0
-
 
     def getCCChatter(self):
         self.handleHolidays()
         return self.CCChatter
 
-
     def fadeAway(self):
         self.sendUpdate('fadeAway', [])
 
-
     def transitionCostume(self):
         self.transitionToCostume = 1
-
-
