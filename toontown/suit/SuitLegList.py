@@ -6,7 +6,8 @@ from toontown.toonbase import ToontownGlobals
 class SuitLeg:
     TWalkFromStreet = 0
     TWalkToStreet = 1
-    TWalk = 2
+    TBellicose = 2
+    TWalk = TBellicose
     TFromSky = 3
     TToSky = 4
     TFromSuitBuilding = 5
@@ -16,7 +17,7 @@ class SuitLeg:
     TypeToName = {
         TWalkFromStreet: 'WalkFromStreet',
         TWalkToStreet: 'WalkToStreet',
-        TWalk: 'Walk',
+        TBellicose: 'Bellicose',
         TFromSky: 'FromSky',
         TToSky: 'ToSky',
         TFromSuitBuilding: 'FromSuitBuilding',
