@@ -6,11 +6,11 @@ from otp.distributed.MessageTypes import *
 from direct.showbase import ShowBase  # __builtin__.config
 from direct.task.TaskManagerGlobal import *  # taskMgr
 from direct.directnotify import DirectNotifyGlobal
-from direct.distributed.NetMessenger import NetMessenger
 from direct.distributed.ConnectionRepository import ConnectionRepository
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.distributed.OTPDatabaseInterface import OTPDatabaseInterface
+from otp.distributed.NetMessenger import NetMessenger
 
 
 # Helper functions for logging output:
