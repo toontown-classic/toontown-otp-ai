@@ -7,10 +7,10 @@ from direct.showbase import ShowBase  # __builtin__.config
 from direct.task.TaskManagerGlobal import *  # taskMgr
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.NetMessenger import NetMessenger
-from direct.distributed.AstronDatabaseInterface import AstronDatabaseInterface
 from direct.distributed.ConnectionRepository import ConnectionRepository
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
+from otp.distributed.OTPDatabaseInterface import OTPDatabaseInterface
 
 
 # Helper functions for logging output:
@@ -130,10 +130,7 @@ def msgpack_encode(dg, element):
 
 
 class OTPInternalRepository(ConnectionRepository):
-
-    notify = \
-        DirectNotifyGlobal.directNotify.newCategory('OTPInternalRepository'
-            )
+    notify = DirectNotifyGlobal.directNotify.newCategory('OTPInternalRepository')
 
     def __init__(
         self,
@@ -170,7 +167,7 @@ class OTPInternalRepository(ConnectionRepository):
         self.__contextCounter = 0
 
         self.netMessenger = NetMessenger(self)
-        self.dbInterface = AstronDatabaseInterface(self)
+        self.dbInterface = OTPDatabaseInterface(self)
 
         self.__callbacks = {}
 
