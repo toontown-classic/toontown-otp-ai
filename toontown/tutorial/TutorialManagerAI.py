@@ -65,10 +65,6 @@ class TutorialFSM(FSM):
         npcDesc = NPCToons.NPCToonDict.get(20001)
         self.flippy = NPCToons.createNPC(self.air, 20001, npcDesc, self.zones['street'], 0)
 
-        if simbase.air.wantHalloween:
-            self.BlackCatManager = DistributedBlackCatMgrAI.DistributedBlackCatMgrAI(self.air)
-            self.BlackCatManager.generateWithRequired(self.zones['street'])
-
         self.hq.insideDoor0.setDoorLock(FADoorCodes.WRONG_DOOR_HQ)
         self.hq.insideDoor1.setDoorLock(FADoorCodes.UNLOCKED)
         self.hq.door0.setDoorLock(FADoorCodes.GO_TO_PLAYGROUND)
