@@ -7,15 +7,34 @@ class MagicWordManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("MagicWordManagerAI")
 
     def setMagicWord(self, word, targetId, zoneId):
+        clientMagicWords = ['endgame', 'wingame', 'oobe', 'tex', 'wire', 'showfont', 'hidefont',
+                            'walk', 'rogues', 'showCS', 'hideCS', 'showCollisions', 'hideCollisions', 
+                            'showCameraCollisions', 'hideCameraCollisions', 'listen', 'nochat', 'chat',
+                            'superchat', 'stress', 'for', 'badname', 'doId', 'hideAttack', 'showAttack',
+                            'collisions_on', 'collisions_off', 'battle_detect_off', 'battle_detect_on',
+                            'addCameraPosition', 'removeCameraPosition', 'printCameraPosition', 'printCameraPositions',
+                            'magic', 'exec', 'run', 'who', 'period', 'direct', 'tt', 'cogPageFull']
+        
         invokerId = self.air.getAvatarIdFromSender()
         invoker = self.air.doId2do.get(invokerId)
         target = self.air.doId2do.get(targetId)
         
         word = word[1:] # Chop off the ~ at the start. It's not needed.
+        splitWord = word.split(' ')
+        args = splitWord[1:]
+        word = splitWord[0].lower()
+        del splitWord
         
-        if word[:5].lower() == 'sethp':
+        for clientWord in clientMagicWords:
+            testWord = clientWord.lower()
+            if testWord in word or word == testWord:
+                self.notify.debug("Avatar %d used Client Magic Word '%s', Arguments were %s" % (invokerId, word, str(args)))
+                self.air.writeServerEvent('client-magic-word', invokerId, word, args)
+                return
+        
+        if word == 'sethp':
             try:
-                hp = int(word[5:])
+                hp = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -25,9 +44,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setHp(hp)
             elif invoker:
                 invoker.b_setHp(hp)
-        elif word[:8].lower() == 'setmaxhp':
+        elif word == 'setmaxhp':
             try:
-                maxHp = int(word[8:])
+                maxHp = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -37,9 +56,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setMaxHp(maxHp)
             elif invoker:
                 invoker.b_setMaxHp(maxHp)
-        elif word[:8].lower() == 'setmoney':
+        elif word == 'setmoney':
             try:
-                money = int(word[8:])
+                money = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -49,9 +68,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setMoney(money)
             elif invoker:
                 invoker.b_setMoney(money)
-        elif word[:11].lower() == 'setmaxmoney':
+        elif word == 'setmaxmoney':
             try:
-                maxMoney = int(word[11:])
+                maxMoney = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -61,9 +80,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setMaxMoney(maxMoney)
             elif invoker:
                 invoker.b_setMaxMoney(maxMoney)
-        elif word[:12].lower() == 'setbankmoney':
+        elif word == 'setbankmoney':
             try:
-                bankMoney = int(word[12:])
+                bankMoney = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -73,9 +92,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setBankMoney(bankMoney)
             elif invoker:
                 invoker.b_setBankMoney(bankMoney)
-        elif word[:15].lower() == 'setmaxbankmoney':
+        elif word == 'setmaxbankmoney':
             try:
-                maxBankMoney = int(word[15:])
+                maxBankMoney = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -85,9 +104,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setMaxBankMoney(maxBankMoney)
             elif invoker:
                 invoker.b_setMaxBankMoney(maxBankMoney)
-        elif word[:4].lower() == 'name':
+        elif word == 'name':
             try:
-                name = str(word[5:])
+                name = " ".join(str(x) for x in args)
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -97,9 +116,9 @@ class MagicWordManagerAI(DistributedObjectAI):
                 target.b_setName(name)
             elif invoker:
                 invoker.b_setName(name)
-        elif word[:11].lower() == 'setmaxcarry':
+        elif word == 'setmaxcarry':
             try:
-                maxCarry = int(word[11:])
+                maxCarry = int(args[0])
             except:
                 if invoker:
                     self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Invalid arguments for Magic Word!"])
@@ -110,6 +129,7 @@ class MagicWordManagerAI(DistributedObjectAI):
             elif invoker:
                 invoker.b_setMaxCarry(maxCarry)
         elif invoker:
+            self.air.writeServerEvent('invalid-magic-word', invokerId, word)
             self.sendUpdateToAvatarId(invokerId, 'setMagicWordResponse', ["Magic Word does not exist!"])
 
     def setWho(self, avIds):

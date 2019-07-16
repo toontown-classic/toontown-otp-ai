@@ -7,8 +7,7 @@ class TimeManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TimeManagerAI")
 
     def requestServerTime(self, context):
-        self.sendUpdateToAvatarId(self.air.getAvatarIdFromSender(), 'serverTime', [context,
-            globalClockDelta.getRealNetworkTime(bits=16), int(time.time())])
+        self.sendUpdateToAvatarId(self.air.getAvatarIdFromSender(), 'serverTime', [context, globalClockDelta.getRealNetworkTime(bits=16), int(time.time())])
 
     def setDisconnectReason(self, reason):
         avId = self.air.getAvatarIdFromSender()
