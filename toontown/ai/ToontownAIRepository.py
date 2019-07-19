@@ -107,6 +107,7 @@ class ToontownAIRepository(ToontownInternalRepository):
         #self.tutorialManager.generateWithRequired(2)
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_OLD_QUIET_ZONE)
+        print self.friendManager.doId
         self.questManager = QuestManagerAI(self)
         #self.banManager = BanManagerAI.BanManagerAI(self)
         #self.achievementsManager = AchievementsManagerAI(self)

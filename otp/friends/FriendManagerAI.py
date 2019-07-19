@@ -14,6 +14,7 @@ class FriendManagerAI(DistributedObjectAI):
     def friendQuery(self, requested):
         avId = self.air.getAvatarIdFromSender()
         if not requested in self.air.doId2do:
+            self.notify.warning('Player %d tried to friend a player that does not exist!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to friend a player that does not exist!')
             return
         context = self.currentContext
@@ -24,9 +25,11 @@ class FriendManagerAI(DistributedObjectAI):
     def cancelFriendQuery(self, context):
         avId = self.air.getAvatarIdFromSender()
         if not context in self.requests:
+            self.notify.warning('Player %d tried to cancel a request that doesn\'t exist!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to cancel a request that doesn\'t exist!')
             return
         if avId != self.requests[context][0][0]:
+            self.notify.warning('Player %d tried to cancel someone elses request!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to cancel someone elses request!')
             return
         self.requests[context][1] = 'cancelled'
@@ -35,12 +38,15 @@ class FriendManagerAI(DistributedObjectAI):
     def inviteeFriendConsidering(self, yesNo, context):
         avId = self.air.getAvatarIdFromSender()
         if not context in self.requests:
+            self.notify.warning('Player %d tried to consider a friend request that doesn\'t exist!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to consider a friend request that doesn\'t exist!')
             return
         if avId != self.requests[context][0][1]:
+            self.notify.warning('Player %d tried to consider for someone else!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to consider for someone else!')
             return
         if self.requests[context][1] != 'friendQuery':
+            self.notify.warning('Player %d tried to reconsider friend request!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to reconsider friend request!')
             return
         if yesNo != 1:
@@ -53,12 +59,15 @@ class FriendManagerAI(DistributedObjectAI):
     def inviteeFriendResponse(self, response, context):
         avId = self.air.getAvatarIdFromSender()
         if not context in self.requests:
+            self.notify.warning('Player %d tried to respond to a friend request that doesn\'t exist!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to respond to a friend request that doesn\'t exist!')
             return
         if avId != self.requests[context][0][1]:
+            self.notify.warning('Player %d tried to respond to someone else\'s request!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to respond to someone else\'s request!')
             return
         if self.requests[context][1] == 'cancelled':
+            self.notify.warning('Player %d tried to respond to non-active friend request!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to respond to non-active friend request!')
             return
         self.sendUpdateToAvatarId(self.requests[context][0][0], 'friendResponse', [response, context])
@@ -89,12 +98,15 @@ class FriendManagerAI(DistributedObjectAI):
     def inviteeAcknowledgeCancel(self, context):
         avId = self.air.getAvatarIdFromSender()
         if not context in self.requests:
+            self.notify.warning('Player %d tried to acknowledge the cancel of a friend request that doesn\'t exist!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to acknowledge the cancel of a friend request that doesn\'t exist!')
             return
         if avId != self.requests[context][0][1]:
+            self.notify.warning('Player %d tried to acknowledge someone else\'s cancel!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to acknowledge someone else\'s cancel!')
             return
         if self.requests[context][1] != 'cancelled':
+            self.notify.warning('Player %d tried to cancel non-cancelled request!!' % (avId))
             self.air.writeServerEvent('suspicious', avId, 'Player tried to cancel non-cancelled request!')
             return
         del self.requests[context]
@@ -121,8 +133,7 @@ class FriendManagerAI(DistributedObjectAI):
             return
 
         dclass = self.air.dclassesByName['DistributedToonAI']
-        dg = dclass.aiFormatUpdate('teleportResponse', fromAvId, self.GetPuppetConnectionChannel(fromAvId), toAvId, [toAvId,
-            0, 0, 0, 0])
+        dg = dclass.aiFormatUpdate('teleportResponse', fromAvId, self.GetPuppetConnectionChannel(fromAvId), toAvId, [toAvId, 0, 0, 0, 0])
 
         self.air.send(dg)
 
