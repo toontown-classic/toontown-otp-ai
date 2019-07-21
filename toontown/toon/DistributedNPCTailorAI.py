@@ -116,7 +116,6 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
          self.npcId,
          0,
          ClockDelta.globalClockDelta.getRealNetworkTime()])
-        self.sendUpdate('setCustomerDNA', [0, ''])
         return Task.done
 
     def completePurchase(self, avId):
@@ -178,8 +177,6 @@ class DistributedNPCTailorAI(DistributedNPCToonBaseAI):
             elif finished == 1:
                 if self.customerDNA:
                     av.b_setDNAString(self.customerDNA.makeNetString())
-            else:
-                self.sendUpdate('setCustomerDNA', [avId, blob])
         else:
             self.notify.warning('no av for avId: %d' % avId)
         if self.timedOut == 1 or finished == 0:
