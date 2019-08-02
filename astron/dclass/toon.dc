@@ -11,6 +11,7 @@ from direct.distributed import DistributedObject/AI
 from otp.ai import TimeManager/AI
 from otp.ai import MagicWordManager/AI
 from otp.friends import FriendManager/AI
+from toontown.ai import NewsManager/AI
 from toontown.classicchars import DistributedCCharBase/AI
 from toontown.classicchars import DistributedMickey/AI
 from toontown.classicchars import DistributedMinnie/AI
