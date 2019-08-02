@@ -120,13 +120,11 @@ def assignRewards(activeToons, toonSkillPtsGained, suitsKilled, zoneId, helpfulT
         toon.b_setAnimState('victory', 1)
 
         if simbase.air.config.GetBool('battle-passing-no-credit', True):
-            # Check if the toon was a helpful toon
             if helpfulToons and toon.doId in helpfulToons:
-
-                # Notify the AI that the toon killed cogs
                 simbase.air.questManager.toonKilledCogs(toon, suitsKilled, zoneId, activeToonList)
                 simbase.air.cogPageManager.toonKilledCogs(toon, suitsKilled, zoneId)
-
-            # Looks like the toon wasnt too helpful...
             else:
                 BattleExperienceAINotify.debug('toon=%d unhelpful not getting killed cog quest credit' % toon.doId)
+        else:
+            simbase.air.questManager.toonKilledCogs(toon, suitsKilled, zoneId, activeToonList)
+            simbase.air.cogPageManager.toonKilledCogs(toon, suitsKilled, zoneId)
